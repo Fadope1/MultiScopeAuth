@@ -23,6 +23,6 @@ async def me(token):
 
 @router.get("/me")
 async def get_me_from_token(request: Request, graph_token: Annotated[str | None, Header(alias="X-Graph-token")]=None):
-    graph_token = request.state.session.get("https://graph.microsoft.com/.default", graph_token)
+    graph_token = request.state.session.get("https://graph.microsoft.com/User.Read", graph_token)
 
     return await me(graph_token)
