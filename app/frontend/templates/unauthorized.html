@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Auth required</title>
+        <script>
+            // Function to start the login process
+            function login() {
+                silentLogin();
+            }
+
+            function silentLogin() {
+                window.location.href = '/api/v1/auth/oauth/silent_login';
+            }
+
+            function regularLogin() {
+                // Regular login process
+                window.location.href = '/api/v1/auth/oauth/login';
+            }
+
+            // Function to handle consent and acquire tokens
+            function consentAndAcquire() {
+                window.location.href = '/api/v1/auth/oauth/consent';
+            }
+
+            // Check for any error parameters in the URL
+            function checkForErrors() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const error = urlParams.get('error');
+                if (error) {
+                    console.error('Error from auth server:', error);
+                    // Determine the type of error and call the appropriate function
+                    if(error === 'silent_login_failed') {
+                        regularLogin();
+                    } else if (error === 'login_failed') {
+                        consentAndAcquire();
+                    }
+                }
+            }
+
+            // On page load, check for errors
+            window.onload = function() {
+                checkForErrors();
+            };
+        </script>
+    </head>
+    <body>
+        <h1>Not authorized</h1>
+        <p>Please authorize by signing in using an MS account</p>
+        <button onclick="login()">Authorize</button>
+    </body>
+</html>
